@@ -9,7 +9,7 @@ if ($Version -notmatch '^\d+\.\d+\.\d+$') {
 }
 
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$distributionName = "BikeFlowServer-$Version-Windows-x64"
+$distributionName = "BikeFlowServer-$Version-linux-amd64"
 $distributionRoot = Join-Path $repositoryRoot "dist\$distributionName"
 $archivePath = Join-Path $repositoryRoot "dist\$distributionName.zip"
 $imageTag = "bikeflowserver:$Version"
@@ -36,25 +36,28 @@ Copy-Item (Join-Path $templatePath "compose.yaml") $distributionRoot
 Copy-Item (Join-Path $templatePath "start.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "stop.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "logs.bat") $distributionRoot
+Copy-Item (Join-Path $templatePath "start.sh") $distributionRoot
+Copy-Item (Join-Path $templatePath "stop.sh") $distributionRoot
+Copy-Item (Join-Path $templatePath "logs.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "README.txt") $distributionRoot
 Copy-Item (Join-Path $repositoryRoot ".env.example") $distributionRoot
 
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-foreach ($fileName in @("compose.yaml", "start.bat", "README.txt")) {
+foreach ($fileName in @("compose.yaml", "start.bat", "start.sh", "README.txt")) {
     $filePath = Join-Path $distributionRoot $fileName
-    $content = Get-Content -Raw $filePath
+    $content = Get-Content -Raw -Encoding UTF8 $filePath
     $content = $content.Replace("bikeflowserver:1.0.0", $imageTag).Replace("@VERSION@", $Version)
     [System.IO.File]::WriteAllText($filePath, $content, $utf8WithoutBom)
 }
 
 Write-Host "Pulling $postgresImage..."
-docker pull $postgresImage
+docker pull --platform linux/amd64 $postgresImage
 if ($LASTEXITCODE -ne 0) {
     throw "Could not download $postgresImage."
 }
 
 Write-Host "Building $imageTag..."
-docker build --tag $imageTag $repositoryRoot
+docker build --platform linux/amd64 --tag $imageTag $repositoryRoot
 if ($LASTEXITCODE -ne 0) {
     throw "Docker image build failed."
 }

@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-bike_server}
@@ -17,6 +18,7 @@ services:
 
   server:
     image: bikeflowserver:1.0.0
+    platform: linux/amd64
     restart: unless-stopped
     init: true
     depends_on:

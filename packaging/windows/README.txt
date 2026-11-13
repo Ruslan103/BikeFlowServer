@@ -1,16 +1,18 @@
-BikeFlowServer @VERSION@ — Windows x64
+BikeFlowServer @VERSION@ — Docker image for linux/amd64
 
 Requirements
-  - Windows 10/11 x64
-  - Docker Desktop with Linux containers enabled
-  - About 3 GB of free disk space for the package and Docker images
+  - Docker Desktop with Linux containers (Windows/macOS), or Docker Engine and Docker Compose v2 (Linux).
+  - An x86-64 Docker host. This release contains a linux/amd64 image; ARM hosts need amd64 emulation.
+  - About 3 GB of free disk space for the package and Docker images.
+  - Java 21 is included in the image. A host JVM is not required.
 
 First start
   1. Extract the complete ZIP archive to a folder.
-  2. Run start.bat. It creates .env from .env.example and opens it in Notepad.
+  2. On Windows, run start.bat. On Linux/macOS, run: sh ./start.sh
+     The first run creates .env from .env.example and stops. Edit .env and set the passwords.
   3. Set unique values for POSTGRES_PASSWORD and BIKE_ADMIN_PASSWORD, then save .env.
      BIKE_ADMIN_PASSWORD must be at least 12 characters.
-  4. Run start.bat again. It loads the bundled images and starts the server and database.
+  4. Run the start script again. It loads the bundled images and starts the server and database.
   5. Open https://localhost:8443/admin and sign in using BIKE_ADMIN_LOGIN and
      BIKE_ADMIN_PASSWORD from .env.
 
@@ -19,10 +21,10 @@ in BIKE_TLS_DNS_NAMES or BIKE_TLS_IP_ADDRESSES before the first start. Names in
 these settings are comma-separated. The certificate is created on first start.
 
 Files
-  start.bat  Creates .env if needed, loads images and starts the application.
-  stop.bat   Stops the application without deleting its database or settings.
-  logs.bat   Follows the server log. Press Ctrl+C to return to the console.
-  .env       Local passwords and connection settings. Keep this file private.
+  start.bat / start.sh  Create .env if needed, load images and start the application.
+  stop.bat / stop.sh    Stop the application without deleting its database or settings.
+  logs.bat / logs.sh    Follow the server log. Press Ctrl+C to return to the console.
+  .env                 Local passwords and connection settings. Keep this file private.
 
 The first start may take a minute while PostgreSQL initializes its database.
 The browser may show a certificate warning for the self-signed local HTTPS
@@ -36,19 +38,21 @@ from this folder:
 This permanently deletes the database, server settings, certificate and logs.
 
 
-BikeFlowServer @VERSION@ — Windows x64
+BikeFlowServer @VERSION@ — Docker-образ для linux/amd64
 
 Требования
-  - Windows 10/11 x64
-  - Docker Desktop с поддержкой Linux-контейнеров
-  - Около 3 ГБ свободного места для пакета и Docker-образов
+  - Docker Desktop с поддержкой Linux-контейнеров (Windows/macOS) либо Docker Engine и Docker Compose v2 (Linux).
+  - Сервер с процессором x86-64. В релиз включён образ linux/amd64; для ARM требуется эмуляция amd64.
+  - Около 3 ГБ свободного места для пакета и Docker-образов.
+  - Java 21 уже включена в образ. Устанавливать JVM на хост не нужно.
 
 Первый запуск
   1. Распакуйте ZIP-архив в папку.
-  2. Запустите start.bat. Скрипт создаст .env на основе .env.example и откроет файл в Блокноте.
+  2. В Windows запустите start.bat. В Linux/macOS выполните: sh ./start.sh
+     При первом запуске скрипт создаст .env из .env.example и завершится. Отредактируйте .env и задайте пароли.
   3. Задайте уникальные значения для POSTGRES_PASSWORD и BIKE_ADMIN_PASSWORD и сохраните .env.
      Длина BIKE_ADMIN_PASSWORD должна быть не менее 12 символов.
-  4. Запустите start.bat ещё раз. Скрипт загрузит Docker-образы из архива и запустит сервер с базой данных.
+  4. Запустите скрипт ещё раз. Он загрузит Docker-образы из архива и запустит сервер с базой данных.
   5. Откройте https://localhost:8443/admin и войдите, используя BIKE_ADMIN_LOGIN и
      BIKE_ADMIN_PASSWORD из файла .env.
 
@@ -57,10 +61,10 @@ BikeFlowServer @VERSION@ — Windows x64
 несколько, разделите их запятыми. Сертификат будет создан при первом запуске.
 
 Файлы
-  start.bat  Создаёт .env при необходимости, загружает образы и запускает приложение.
-  stop.bat   Останавливает приложение, не удаляя базу данных и настройки.
-  logs.bat   Показывает журнал сервера. Нажмите Ctrl+C, чтобы вернуться в консоль.
-  .env       Локальные пароли и настройки подключения. Храните файл в безопасном месте.
+  start.bat / start.sh  Создают .env при необходимости, загружают образы и запускают приложение.
+  stop.bat / stop.sh    Останавливают приложение, не удаляя базу данных и настройки.
+  logs.bat / logs.sh    Показывают журнал сервера. Нажмите Ctrl+C, чтобы вернуться в консоль.
+  .env                 Локальные пароли и настройки подключения. Храните файл в безопасном месте.
 
 При первом запуске PostgreSQL может понадобиться около минуты для инициализации базы.
 Браузер может показать предупреждение о самоподписанном HTTPS-сертификате.

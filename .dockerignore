@@ -2,6 +2,7 @@
 .idea
 .vscode
 target
+dist
 config
 logs
 craft-bike-server-*.tar
