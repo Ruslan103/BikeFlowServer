@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.0.0"
+    [string]$Version = "1.0.1"
 )
 
 $ErrorActionPreference = "Stop"
@@ -46,7 +46,7 @@ $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 foreach ($fileName in @("compose.yaml", "start-windows.bat", "start-linux.sh", "README.txt")) {
     $filePath = Join-Path $distributionRoot $fileName
     $content = Get-Content -Raw -Encoding UTF8 $filePath
-    $content = $content.Replace("bikeflowserver:1.0.0", $imageTag).Replace("@VERSION@", $Version)
+    $content = $content.Replace("bikeflowserver:1.0.1", $imageTag).Replace("@VERSION@", $Version)
     [System.IO.File]::WriteAllText($filePath, $content, $utf8WithoutBom)
 }
 

@@ -17,7 +17,7 @@ services:
       start_period: 10s
 
   server:
-    image: bikeflowserver:1.0.0
+    image: bikeflowserver:1.0.1
     platform: linux/amd64
     restart: unless-stopped
     init: true

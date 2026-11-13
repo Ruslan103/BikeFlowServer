@@ -12,7 +12,7 @@
 .\tools\build-release.ps1
 ```
 
-Готовый архив появится в `dist\BikeFlowServer-1.0.0-linux-amd64.zip`. Образ рассчитан на Docker-хост `linux/amd64`; Java и Maven на хост устанавливать не нужно — Java 21 уже включена в Docker-образ. В Windows используйте `start-windows.bat`, в Linux/macOS — `sh ./start-linux.sh`. Первый запуск создаст `.env`; после заполнения паролей запустите скрипт ещё раз.
+Готовый архив появится в `dist\BikeFlowServer-1.0.1-linux-amd64.zip`. Образ рассчитан на Docker-хост `linux/amd64`; Java и Maven на хост устанавливать не нужно — Java 21 уже включена в Docker-образ. В Windows используйте `start-windows.bat`, в Linux/macOS — `sh ./start-linux.sh`. Первый запуск создаст `.env`; после заполнения паролей запустите скрипт ещё раз.
 
 ### Шаг № 1. Установите Docker
 

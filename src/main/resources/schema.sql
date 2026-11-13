@@ -205,6 +205,13 @@ CREATE TABLE IF NOT EXISTS work_order_customer_parts (
     included_accessories TEXT
 );
 
+CREATE TABLE IF NOT EXISTS work_order_default_comments (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    default_comment TEXT NOT NULL,
+    created_by BIGINT REFERENCES user_accounts(id),
+    updated_by BIGINT REFERENCES user_accounts(id)
+);
+
 CREATE INDEX IF NOT EXISTS ix_client_bicycles_client ON client_bicycles(client);
 CREATE INDEX IF NOT EXISTS ix_client_contacts_client ON client_contacts(client);
 CREATE INDEX IF NOT EXISTS ix_service_prices_service_valid_from ON service_prices(service, valid_from DESC);
@@ -273,6 +280,9 @@ ALTER TABLE IF EXISTS work_order_products
     ADD COLUMN IF NOT EXISTS created_by BIGINT REFERENCES user_accounts(id),
     ADD COLUMN IF NOT EXISTS updated_by BIGINT REFERENCES user_accounts(id);
 ALTER TABLE IF EXISTS work_order_customer_parts
+    ADD COLUMN IF NOT EXISTS created_by BIGINT REFERENCES user_accounts(id),
+    ADD COLUMN IF NOT EXISTS updated_by BIGINT REFERENCES user_accounts(id);
+ALTER TABLE IF EXISTS work_order_default_comments
     ADD COLUMN IF NOT EXISTS created_by BIGINT REFERENCES user_accounts(id),
     ADD COLUMN IF NOT EXISTS updated_by BIGINT REFERENCES user_accounts(id);
 ALTER TABLE IF EXISTS work_order_statuses
