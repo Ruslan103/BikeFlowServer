@@ -5,7 +5,7 @@ cd /d "%~dp0"
 if not exist ".env" (
     copy /Y ".env.example" ".env" >nul
     echo Created .env from .env.example.
-    echo Set POSTGRES_PASSWORD and BIKE_ADMIN_PASSWORD in .env, save it, then run start.bat again.
+    echo Set POSTGRES_PASSWORD and BIKE_ADMIN_PASSWORD in .env, save it, then run start-windows.bat again.
     start "" notepad.exe "%~dp0.env"
     pause
     exit /b 0

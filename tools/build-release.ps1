@@ -33,17 +33,17 @@ $null = New-Item -ItemType Directory -Path (Split-Path $distributionRoot -Parent
 $null = New-Item -ItemType Directory -Path $distributionRoot
 
 Copy-Item (Join-Path $templatePath "compose.yaml") $distributionRoot
-Copy-Item (Join-Path $templatePath "start.bat") $distributionRoot
+Copy-Item (Join-Path $templatePath "start-windows.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "stop.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "logs.bat") $distributionRoot
-Copy-Item (Join-Path $templatePath "start.sh") $distributionRoot
+Copy-Item (Join-Path $templatePath "start-linux.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "stop.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "logs.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "README.txt") $distributionRoot
 Copy-Item (Join-Path $repositoryRoot ".env.example") $distributionRoot
 
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-foreach ($fileName in @("compose.yaml", "start.bat", "start.sh", "README.txt")) {
+foreach ($fileName in @("compose.yaml", "start-windows.bat", "start-linux.sh", "README.txt")) {
     $filePath = Join-Path $distributionRoot $fileName
     $content = Get-Content -Raw -Encoding UTF8 $filePath
     $content = $content.Replace("bikeflowserver:1.0.0", $imageTag).Replace("@VERSION@", $Version)

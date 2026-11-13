@@ -8,7 +8,7 @@ Requirements
 
 First start
   1. Extract the complete ZIP archive to a folder.
-  2. On Windows, run start.bat. On Linux/macOS, run: sh ./start.sh
+  2. On Windows, run start-windows.bat. On Linux/macOS, run: sh ./start-linux.sh
      The first run creates .env from .env.example and stops. Edit .env and set the passwords.
   3. Set unique values for POSTGRES_PASSWORD and BIKE_ADMIN_PASSWORD, then save .env.
      BIKE_ADMIN_PASSWORD must be at least 12 characters.
@@ -21,7 +21,8 @@ in BIKE_TLS_DNS_NAMES or BIKE_TLS_IP_ADDRESSES before the first start. Names in
 these settings are comma-separated. The certificate is created on first start.
 
 Files
-  start.bat / start.sh  Create .env if needed, load images and start the application.
+  start-windows.bat     Windows launcher: create .env if needed, load images and start the application.
+  start-linux.sh        Linux/macOS launcher: create .env if needed, load images and start the application.
   stop.bat / stop.sh    Stop the application without deleting its database or settings.
   logs.bat / logs.sh    Follow the server log. Press Ctrl+C to return to the console.
   .env                 Local passwords and connection settings. Keep this file private.
@@ -48,7 +49,7 @@ BikeFlowServer @VERSION@ — Docker-образ для linux/amd64
 
 Первый запуск
   1. Распакуйте ZIP-архив в папку.
-  2. В Windows запустите start.bat. В Linux/macOS выполните: sh ./start.sh
+  2. В Windows запустите start-windows.bat. В Linux/macOS выполните: sh ./start-linux.sh
      При первом запуске скрипт создаст .env из .env.example и завершится. Отредактируйте .env и задайте пароли.
   3. Задайте уникальные значения для POSTGRES_PASSWORD и BIKE_ADMIN_PASSWORD и сохраните .env.
      Длина BIKE_ADMIN_PASSWORD должна быть не менее 12 символов.
@@ -61,7 +62,8 @@ BikeFlowServer @VERSION@ — Docker-образ для linux/amd64
 несколько, разделите их запятыми. Сертификат будет создан при первом запуске.
 
 Файлы
-  start.bat / start.sh  Создают .env при необходимости, загружают образы и запускают приложение.
+  start-windows.bat     Запуск в Windows: создаёт .env при необходимости, загружает образы и запускает приложение.
+  start-linux.sh        Запуск в Linux/macOS: создаёт .env при необходимости, загружает образы и запускает приложение.
   stop.bat / stop.sh    Останавливают приложение, не удаляя базу данных и настройки.
   logs.bat / logs.sh    Показывают журнал сервера. Нажмите Ctrl+C, чтобы вернуться в консоль.
   .env                 Локальные пароли и настройки подключения. Храните файл в безопасном месте.
