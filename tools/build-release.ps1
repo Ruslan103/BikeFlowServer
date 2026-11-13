@@ -34,10 +34,10 @@ $null = New-Item -ItemType Directory -Path $distributionRoot
 
 Copy-Item (Join-Path $templatePath "compose.yaml") $distributionRoot
 Copy-Item (Join-Path $templatePath "start-windows.bat") $distributionRoot
-Copy-Item (Join-Path $templatePath "stop.bat") $distributionRoot
+Copy-Item (Join-Path $templatePath "stop-windows.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "logs.bat") $distributionRoot
 Copy-Item (Join-Path $templatePath "start-linux.sh") $distributionRoot
-Copy-Item (Join-Path $templatePath "stop.sh") $distributionRoot
+Copy-Item (Join-Path $templatePath "stop-linux.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "logs.sh") $distributionRoot
 Copy-Item (Join-Path $templatePath "README.txt") $distributionRoot
 Copy-Item (Join-Path $repositoryRoot ".env.example") $distributionRoot

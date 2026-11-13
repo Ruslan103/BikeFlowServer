@@ -23,7 +23,8 @@ these settings are comma-separated. The certificate is created on first start.
 Files
   start-windows.bat     Windows launcher: create .env if needed, load images and start the application.
   start-linux.sh        Linux/macOS launcher: create .env if needed, load images and start the application.
-  stop.bat / stop.sh    Stop the application without deleting its database or settings.
+  stop-windows.bat     Windows: stop the application without deleting its database or settings.
+  stop-linux.sh        Linux/macOS: stop the application without deleting its database or settings.
   logs.bat / logs.sh    Follow the server log. Press Ctrl+C to return to the console.
   .env                 Local passwords and connection settings. Keep this file private.
 
@@ -64,7 +65,8 @@ BikeFlowServer @VERSION@ — Docker-образ для linux/amd64
 Файлы
   start-windows.bat     Запуск в Windows: создаёт .env при необходимости, загружает образы и запускает приложение.
   start-linux.sh        Запуск в Linux/macOS: создаёт .env при необходимости, загружает образы и запускает приложение.
-  stop.bat / stop.sh    Останавливают приложение, не удаляя базу данных и настройки.
+  stop-windows.bat     Windows: останавливает приложение, не удаляя базу данных и настройки.
+  stop-linux.sh        Linux/macOS: останавливает приложение, не удаляя базу данных и настройки.
   logs.bat / logs.sh    Показывают журнал сервера. Нажмите Ctrl+C, чтобы вернуться в консоль.
   .env                 Локальные пароли и настройки подключения. Храните файл в безопасном месте.
 
