@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Логи · Craft Bike</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <script type="module" src="/admin-assets/logs.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/admin"><span class="brand-mark" aria-hidden="true">CB</span> CRAFT BIKE</a>
+    <div class="header-actions"><span class="role-badge">Администратор</span><button class="button subtle" id="shutdown-server" type="button">Выключить ⏻</button><button class="button subtle" id="logout" type="button">Выйти ↗</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <p class="eyebrow">СЕРВЕР</p>
+      <a class="nav-item" href="/admin"><span aria-hidden="true">⚙</span> Настройки</a>
+      <a class="nav-item active" href="/admin/logs" aria-current="page"><span aria-hidden="true">≡</span> Логи</a>
+      <a class="nav-item" id="users-nav" href="/admin/users"><span aria-hidden="true">♙</span> Пользователи</a>
+      <p class="sidebar-note">Последние записи работы сервера.</p>
+    </aside>
+    <main class="main-content">
+      <div class="page-heading"><p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p><h1>Логи сервера</h1><p class="muted">Показываются последние 500 строк. Обновление каждые 5 секунд.</p></div>
+      <p id="message" class="message" role="status" aria-live="polite" hidden></p>
+      <section class="settings-card logs-card" aria-label="Записи журнала">
+        <div class="logs-toolbar"><span id="log-status" class="muted" role="status" aria-live="polite">Загрузка…</span><button class="button subtle" id="refresh-logs" type="button">Обновить ↻</button></div>
+        <p id="logs-empty" class="muted" hidden>Файл логов пока не создан.</p>
+        <pre id="log-output" class="log-output" aria-live="polite"></pre>
+      </section>
+      <footer class="page-footer">CRAFT BIKE <span>Кабинет администратора</span></footer>
+    </main>
+  </div>
+</body>
+</html>

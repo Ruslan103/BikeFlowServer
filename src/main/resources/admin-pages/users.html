@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Пользователи · Craft Bike</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <script type="module" src="/admin-assets/users.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/admin"><span class="brand-mark" aria-hidden="true">CB</span> CRAFT BIKE</a>
+    <div class="header-actions"><span class="role-badge">Администратор</span><button class="button subtle" id="restart-server" type="button">Перезапустить ↻</button><button class="button subtle" id="shutdown-server" type="button">Выключить ⏻</button><button class="button subtle" id="logout" type="button">Выйти ↗</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <p class="eyebrow">СЕРВЕР</p>
+      <a class="nav-item" href="/admin"><span aria-hidden="true">⚙</span> Настройки</a>
+      <a class="nav-item" href="/admin/logs"><span aria-hidden="true">≡</span> Логи</a>
+      <a class="nav-item active" href="/admin/users" aria-current="page"><span aria-hidden="true">♙</span> Пользователи</a>
+      <p class="sidebar-note">Учётные записи, доступ и пароли.</p>
+    </aside>
+    <main class="main-content">
+      <div class="page-heading"><p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p><h1>Пользователи</h1><p class="muted">Создавайте учётные записи и управляйте их доступом. Вместо удаления аккаунт можно отключить, чтобы сохранить историю.</p></div>
+      <p id="message" class="message" role="status" aria-live="polite" hidden></p>
+
+      <section class="settings-card">
+        <div class="section-heading"><span class="section-icon" aria-hidden="true">♙</span><div><h2>Учётные записи</h2><p id="list-summary" class="muted">Загрузка списка…</p></div><button class="button primary" id="show-create" type="button">Добавить пользователя +</button></div>
+        <form id="filters" class="user-filters">
+          <div class="field"><label for="search">Поиск по логину или имени</label><input id="search" name="search" maxlength="100" autocomplete="off"></div>
+          <div class="field"><label for="enabled-filter">Состояние</label><select id="enabled-filter" name="enabled"><option value="">Все</option><option value="true">Активные</option><option value="false">Отключённые</option></select></div>
+          <button class="button subtle" type="submit">Найти</button>
+        </form>
+        <div class="table-scroll">
+          <table class="user-table">
+            <thead><tr><th>Логин</th><th>Имя</th><th>Роли</th><th>Состояние</th><th>Создан</th><th></th></tr></thead>
+            <tbody id="user-rows"></tbody>
+          </table>
+          <p id="list-empty" class="muted empty-state" hidden>Пользователи не найдены.</p>
+        </div>
+        <div class="pagination"><span id="page-label" class="muted"></span><div><button id="previous-page" class="button subtle" type="button">← Назад</button><button id="next-page" class="button subtle" type="button">Дальше →</button></div></div>
+      </section>
+
+      <section id="create-panel" class="settings-card" hidden>
+        <div class="section-heading"><span class="section-icon" aria-hidden="true">＋</span><div><h2>Новый пользователь</h2><p class="muted">Пароль должен содержать от 12 до 128 символов.</p></div></div>
+        <form id="create-form">
+          <div class="field-grid">
+            <div class="field"><label for="create-login">Логин</label><input id="create-login" name="login" required minlength="3" maxlength="100" pattern="[a-zA-Z0-9._-]{3,100}" autocomplete="off"></div>
+            <div class="field"><label for="create-name">Отображаемое имя</label><input id="create-name" name="displayName" maxlength="200" autocomplete="name"></div>
+          </div>
+          <div class="field"><label for="create-password">Начальный пароль</label><input id="create-password" name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div>
+          <fieldset class="role-fieldset"><legend>Роли</legend><div id="create-roles" class="role-options"></div></fieldset>
+          <label class="checkbox-label"><input id="create-enabled" type="checkbox" checked> Учётная запись активна</label>
+          <div class="form-actions"><button class="button primary" type="submit">Создать пользователя</button><button class="button subtle" id="cancel-create" type="button">Отмена</button></div>
+        </form>
+      </section>
+
+      <section id="edit-panel" class="settings-card" hidden>
+        <div class="section-heading"><span class="section-icon" aria-hidden="true">✎</span><div><h2>Настройки пользователя</h2><p id="edit-user-heading" class="muted"></p></div><button class="button subtle" id="close-edit" type="button">Закрыть</button></div>
+        <form id="edit-form">
+          <div class="field-grid">
+            <div class="field"><label for="edit-login">Логин</label><input id="edit-login" name="login" required minlength="3" maxlength="100" pattern="[a-zA-Z0-9._-]{3,100}" autocomplete="off"></div>
+            <div class="field"><label for="edit-name">Отображаемое имя</label><input id="edit-name" name="displayName" maxlength="200"></div>
+          </div>
+          <button class="button primary" type="submit">Сохранить профиль</button>
+        </form>
+
+        <div class="account-tools">
+          <fieldset class="role-fieldset"><legend>Роли</legend><div id="edit-roles" class="role-options"></div><button class="button subtle" id="save-roles" type="button">Сохранить роли</button></fieldset>
+          <div class="account-action"><div><strong id="enabled-label">Состояние учётной записи</strong><p class="muted">Отключённый пользователь не сможет войти.</p></div><button class="button subtle" id="toggle-enabled" type="button"></button></div>
+          <form id="reset-password-form" class="account-action password-action">
+            <div><label for="reset-password">Задать новый пароль</label><p class="muted">От 12 до 128 символов. Текущий пароль не требуется.</p></div>
+            <input id="reset-password" name="newPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password">
+            <button class="button subtle" type="submit">Сбросить пароль</button>
+          </form>
+          <div class="account-action"><div><strong>Сеансы пользователя</strong><p class="muted">Завершить все активные сеансы этой учётной записи.</p></div><button class="button subtle" id="logout-user-sessions" type="button">Завершить сеансы</button></div>
+        </div>
+      </section>
+
+      <section class="settings-card">
+        <div class="section-heading"><span class="section-icon" aria-hidden="true">⌑</span><div><h2>Мой пароль</h2><p class="muted">После смены пароля потребуется войти снова.</p></div></div>
+        <form id="own-password-form">
+          <div class="field-grid">
+            <div class="field"><label for="current-password">Текущий пароль</label><input id="current-password" name="currentPassword" type="password" required autocomplete="current-password"></div>
+            <div class="field"><label for="new-own-password">Новый пароль</label><input id="new-own-password" name="newPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div>
+          </div>
+          <button class="button primary" type="submit">Изменить мой пароль</button>
+        </form>
+      </section>
+      <footer class="page-footer">CRAFT BIKE <span>Кабинет администратора</span></footer>
+    </main>
+  </div>
+</body>
+</html>

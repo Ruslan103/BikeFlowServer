@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Настройки сервера · Craft Bike</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/admin-assets/admin.css">
+  <script type="module" src="/admin-assets/settings.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/admin"><span class="brand-mark" aria-hidden="true">CB</span> CRAFT BIKE</a>
+    <div class="header-actions"><span class="role-badge" id="mode">Администратор</span><button class="button subtle" id="restart-server" type="button">Перезапустить ↻</button><button class="button subtle" id="shutdown-server" type="button">Выключить ⏻</button><button class="button subtle" id="logout" type="button">Выйти ↗</button></div>
+  </header>
+  <div class="workspace">
+    <aside class="sidebar">
+      <p class="eyebrow">СЕРВЕР</p>
+      <a class="nav-item active" href="/admin" aria-current="page"><span aria-hidden="true">⚙</span> Настройки</a>
+      <a class="nav-item" href="/admin/logs"><span aria-hidden="true">≡</span> Логи</a>
+      <a class="nav-item" id="users-nav" href="/admin/users"><span aria-hidden="true">♙</span> Пользователи</a>
+      <p class="sidebar-note">Подключения и параметры вашей мастерской.</p>
+    </aside>
+    <main class="main-content">
+      <div class="page-heading"><p class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</p><h1>Настройки сервера</h1><p class="muted">Управляйте подключением к базе и сохранёнными данными Trello.</p></div>
+      <div id="setup-notice" class="notice" hidden>Режим первичной настройки. После сохранения нажмите «Перезапустить сервер», чтобы запустить обычный режим и API. Для следующих запусков удалите <code>--setup</code> и переменную <code>BIKE_SETUP_MODE</code> из конфигурации IDEA, если вы их задавали.</div>
+      <section class="settings-card" aria-labelledby="server-addresses-heading">
+        <div class="section-heading"><span class="section-icon" aria-hidden="true">⌖</span><div><h2 id="server-addresses-heading">Адреса сервера</h2><p class="muted">Используйте адрес, доступный с устройства, на котором запущен CraftBiker.</p></div><button id="refresh-addresses" type="button" class="button">Обновить</button></div>
+        <div class="address-group"><h3>Локальные адреса</h3><ul id="local-addresses" class="address-list"><li class="muted">Определяем адреса…</li></ul></div>
+        <div class="address-group"><h3>Публичный адрес</h3><ul id="public-address" class="address-list" aria-live="polite"><li class="muted">Определяем адрес…</li></ul></div>
+        <p class="section-note">Адреса обнаруживаются автоматически и могут быть недоступны клиенту из-за сети, NAT или настроек брандмауэра. При запуске в Docker локальный адрес контейнера может быть недоступен с других устройств — в таком случае используйте IP компьютера-хоста. Публичный IP определяется через внешний сервис api.ipify.org; для доступа из интернета также нужна настройка роутера или прокси и сертификат для используемого имени.</p>
+      </section>
+      <form id="settings-form">
+        <section class="settings-card" aria-labelledby="database-heading">
+          <div class="section-heading"><span class="section-icon" aria-hidden="true">▤</span><div><h2 id="database-heading">База данных</h2><p class="muted">PostgreSQL · основное хранилище приложения</p></div></div>
+          <div class="field"><label for="database-url">Адрес подключения</label><input id="database-url" name="databaseUrl" required maxlength="2048" spellcheck="false" placeholder="jdbc:postgresql://localhost:5432/bike_server"><p class="hint">Укажите сервер, порт и название базы. Логин и пароль вводятся отдельно.</p></div>
+          <div class="field-grid">
+            <div class="field"><label for="database-username">Пользователь базы</label><input id="database-username" name="databaseUsername" required maxlength="100" autocomplete="off" spellcheck="false"></div>
+            <div class="field"><div class="label-row"><label for="database-password">Пароль базы</label><span id="database-password-status" class="secret-status"></span></div><input id="database-password" name="databasePassword" type="password" autocomplete="new-password" maxlength="1024" placeholder="Введите пароль"><label class="checkbox-label" id="clear-database-password-row" hidden><input type="checkbox" id="clear-database-password"> Удалить сохранённый пароль</label></div>
+          </div>
+          <p class="section-note">При смене базы текущая сессия завершится. Войдите снова в выбранной базе.</p>
+        </section>
+        <section class="settings-card" aria-labelledby="trello-heading">
+          <div class="section-heading"><span class="section-icon trello-icon" aria-hidden="true">▥</span><div><h2 id="trello-heading">Trello</h2><p class="muted">Подключение карточек бланков к Trello</p></div><span class="soft-badge">Интеграция</span></div>
+          <div class="field"><div class="label-row"><label for="trello-api-key">API-ключ</label><span id="trello-api-key-status" class="secret-status"></span></div><input id="trello-api-key" name="trelloApiKey" type="password" autocomplete="new-password" maxlength="1024" placeholder="Введите API-ключ Trello"><label class="checkbox-label" id="clear-trello-api-key-row" hidden><input type="checkbox" id="clear-trello-api-key"> Удалить сохранённый ключ</label></div>
+          <div class="field"><div class="label-row"><label for="trello-token">Токен</label><span id="trello-token-status" class="secret-status"></span></div><input id="trello-token" name="trelloToken" type="password" autocomplete="new-password" maxlength="4096" placeholder="Введите токен Trello"><label class="checkbox-label" id="clear-trello-token-row" hidden><input type="checkbox" id="clear-trello-token"> Удалить сохранённый токен</label></div>
+          <p class="section-note">Ключ и токен используются сервером для подключения к Trello. Для создания карточек токен должен иметь права read и write.</p>
+        </section>
+        <section class="settings-card" aria-labelledby="tls-heading">
+          <div class="section-heading"><span class="section-icon" aria-hidden="true">🔒</span><div><h2 id="tls-heading">HTTPS и сертификат</h2><p class="muted">При первом обычном запуске сервер создаёт сертификат автоматически. Действующий сертификат не заменяется без вашего действия.</p></div></div>
+          <div class="field"><label for="tls-dns-names">Дополнительные DNS-имена</label><input id="tls-dns-names" maxlength="2048" spellcheck="false" placeholder="bike-server, server.example.com"><p class="hint">Можно оставить пустым: сервер добавит localhost и своё имя. Дополнительные имена укажите через запятую.</p></div>
+          <div class="field"><label for="tls-ip-addresses">Дополнительные IP-адреса</label><input id="tls-ip-addresses" maxlength="2048" spellcheck="false" placeholder="192.168.1.20"><p class="hint">Сетевые адреса сервера добавятся автоматически. Дополнительные IP укажите через запятую.</p></div>
+          <div class="field-grid tls-actions"><button id="issue-certificate" type="button" class="button primary">Создать сертификат, если его нет</button><button id="download-certificate" type="button" class="button">Скачать публичный сертификат (.crt)</button></div>
+          <div class="field-grid tls-upload">
+            <div class="field"><label for="tls-keystore">Загрузить сертификат на сервер (.p12)</label><input id="tls-keystore" type="file" accept=".p12,application/x-pkcs12"></div>
+            <div class="field"><label for="tls-keystore-password">Пароль файла .p12</label><input id="tls-keystore-password" type="password" autocomplete="new-password" maxlength="1024"></div>
+          </div>
+          <button id="upload-certificate" type="button" class="button">Загрузить сертификат на сервер</button>
+          <p class="section-note">Файл .p12 должен содержать сертификат и закрытый ключ. Не передавайте его клиентам; клиенту нужен только публичный .crt. Сертификат, созданный при запуске, сразу используется HTTPS. Загруженный .p12 применяется после перезапуска сервера.</p>
+        </section>
+        <p class="hint secret-hint">Сохранённые секреты не отображаются. Оставьте поле пустым, чтобы сохранить прежнее значение.</p>
+        <div id="restart-notice" class="notice" hidden>В этом режиме новое подключение будет применено при запуске обычного режима.</div>
+        <p id="message" class="message" role="status" aria-live="polite" hidden></p>
+        <div class="save-bar"><span class="muted">Изменения сохраняются по кнопке</span><button id="save" type="submit" class="button primary" disabled>Сохранить настройки <span aria-hidden="true">→</span></button></div>
+      </form>
+      <footer class="page-footer">CRAFT BIKE <span>Кабинет администратора</span></footer>
+    </main>
+  </div>
+</body>
+</html>

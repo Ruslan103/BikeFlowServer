@@ -1,0 +1,11 @@
+.git
+.idea
+.vscode
+target
+config
+logs
+craft-bike-server-*.tar
+.env
+.env.*
+!.env.example
+*.iml

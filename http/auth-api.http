@@ -1,0 +1,117 @@
+# Configure PostgreSQL through SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME,
+# SPRING_DATASOURCE_PASSWORD before starting the server.
+# To create the first administrator on an empty database, set BIKE_ADMIN_LOGIN
+# and BIKE_ADMIN_PASSWORD (12-128 characters). Remove these variables after setup.
+# Set adminLogin and adminPassword in your private HTTP client environment.
+# The HTTP client must retain the SESSION cookie between requests.
+# For HTTPS deployments set SERVER_SERVLET_SESSION_COOKIE_SECURE=true.
+@baseUrl = http://localhost:8080
+@userId = 1
+
+### Obtain CSRF token before login (also establishes an anonymous session).
+GET {{baseUrl}}/api/auth/csrf
+
+> {%
+    client.global.set("csrfToken", response.body.token);
+%}
+
+### Login. Passwords are sent only in request bodies.
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "login": "{{adminLogin}}",
+  "password": "{{adminPassword}}"
+}
+
+### Login rotates the session identifier and clears CSRF: get a fresh token.
+GET {{baseUrl}}/api/auth/csrf
+
+> {%
+    client.global.set("csrfToken", response.body.token);
+%}
+
+### Current user
+GET {{baseUrl}}/api/users/me
+
+### Available roles (ADMIN)
+GET {{baseUrl}}/api/roles
+
+### List users (ADMIN); enabled and search are optional.
+GET {{baseUrl}}/api/users?page=0&size=20&enabled=true&search=ivan
+
+### Create user (ADMIN). Set initialPassword in your private client environment.
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "login": "ivan",
+  "displayName": "Ivan",
+  "password": "{{initialPassword}}",
+  "roleCodes": ["ADMIN"],
+  "enabled": true
+}
+
+### Get user (ADMIN)
+GET {{baseUrl}}/api/users/{{userId}}
+
+### Update login and name (ADMIN)
+PUT {{baseUrl}}/api/users/{{userId}}
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "login": "ivan",
+  "displayName": "Ivan Petrov"
+}
+
+### Replace roles (ADMIN). Revokes all target user sessions.
+PUT {{baseUrl}}/api/users/{{userId}}/roles
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "roleCodes": ["ADMIN"]
+}
+
+### Enable/disable user (ADMIN). Revokes all target user sessions.
+PUT {{baseUrl}}/api/users/{{userId}}/enabled
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "enabled": false
+}
+
+### Change own password; requires current password. Revokes own sessions.
+PUT {{baseUrl}}/api/users/me/password
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "currentPassword": "{{adminPassword}}",
+  "newPassword": "{{newPassword}}"
+}
+
+### Reset user password (ADMIN). Revokes all target user sessions.
+PUT {{baseUrl}}/api/users/{{userId}}/password
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "newPassword": "{{newPassword}}"
+}
+
+### Revoke target user's sessions (ADMIN)
+POST {{baseUrl}}/api/users/{{userId}}/logout-all
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Revoke all own sessions; next request requires login.
+POST {{baseUrl}}/api/users/me/logout-all
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Logout current session. Obtain a new CSRF token before logging in again.
+POST {{baseUrl}}/api/auth/logout
+X-CSRF-TOKEN: {{csrfToken}}

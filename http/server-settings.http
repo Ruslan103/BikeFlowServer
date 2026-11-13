@@ -1,0 +1,76 @@
+# Server settings cabinet: http://localhost:8080/admin
+#
+# FIRST CONFIGURATION (does not require a running or configured PostgreSQL):
+# 1. In the run configuration, set BIKE_ADMIN_LOGIN and BIKE_ADMIN_PASSWORD (12-128 chars).
+# 2. Start DemoApplication with program argument --setup (or BIKE_SETUP_MODE=true).
+#    This mode always binds to 127.0.0.1 and uses an in-memory admin account/session.
+# 3. Open /admin, log in, enter database URL, username/password and optional Trello credentials.
+# 4. Keep BIKE_ADMIN_LOGIN and BIKE_ADMIN_PASSWORD for the first normal start:
+#    AdminBootstrap will create the database ADMIN account if user_accounts is empty.
+#    Save settings and use POST /api/admin/restart to start normal mode.
+#    Remove --setup / BIKE_SETUP_MODE from the IDEA run configuration for future launches.
+# 5. After successful normal startup, remove BIKE_ADMIN_LOGIN and BIKE_ADMIN_PASSWORD.
+#
+# Database must already exist; schema.sql creates tables inside it.
+# Default settings file: ./config/server-settings.properties, relative to working directory.
+# Set BIKE_SETTINGS_FILE to an absolute .properties path to override its location.
+# Saved secrets are stored locally; file permissions are restricted to the OS account.
+# SPRING_DATASOURCE_URL / USERNAME / PASSWORD and command-line datasource properties
+# override the saved file. Remove those overrides to use settings from the cabinet.
+# In normal mode the database pool switches after validating the new connection.
+# The target database must already contain the same active ADMIN account ID.
+# The target database must have the application tables and Spring Session tables.
+# The administrator signs in again after a database switch.
+# In --setup mode settings are saved first; POST /api/admin/restart starts the
+# normal application and initializes the JPA-backed API (new JVM for JAR, new
+# Spring context for IDEA). GET /api/admin/logs returns the last 500 log lines.
+# Trello data is saved only; no Trello requests are made.
+#
+# Secrets are never returned in API responses.
+# Omitted/null/empty secret field = preserve current value.
+# clear...: true with no new value = explicitly remove saved secret.
+# Supplying both a non-empty new value and clear...: true is rejected.
+#
+# Before requests below, log in using auth-api.http.
+@baseUrl = http://localhost:8080
+
+### Refresh CSRF after login; the HTTP client must retain session cookies.
+GET {{baseUrl}}/api/auth/csrf
+
+> {%
+    client.global.set("csrfToken", response.body.token);
+%}
+
+### Read saved settings and presence flags (ADMIN only).
+GET {{baseUrl}}/api/admin/settings
+
+### Restart the Spring application in the current Java process (ADMIN only).
+POST {{baseUrl}}/api/admin/restart
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Shut down the server process (ADMIN only).
+POST {{baseUrl}}/api/admin/shutdown
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Save database connection while retaining all saved secrets.
+PUT {{baseUrl}}/api/admin/settings
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "databaseUrl": "jdbc:postgresql://localhost:5432/bike_server",
+  "databaseUsername": "postgres"
+}
+
+### Replace secrets. Define these variables in your private HTTP client environment.
+PUT {{baseUrl}}/api/admin/settings
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "databaseUrl": "jdbc:postgresql://localhost:5432/bike_server",
+  "databaseUsername": "postgres",
+  "databasePassword": "{{databasePassword}}",
+  "trelloApiKey": "{{trelloApiKey}}",
+  "trelloToken": "{{trelloToken}}"
+}
