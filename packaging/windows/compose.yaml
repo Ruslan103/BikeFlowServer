@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bike_server}
+      POSTGRES_USER: ${POSTGRES_USER:-bike_server}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  server:
+    image: bikeflowserver:1.0.0
+    restart: unless-stopped
+    init: true
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      BIKE_DOCKER: "true"
+      BIKE_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-bike_server}
+      BIKE_DB_USERNAME: ${POSTGRES_USER:-bike_server}
+      BIKE_DB_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      BIKE_ADMIN_LOGIN: ${BIKE_ADMIN_LOGIN:?Set BIKE_ADMIN_LOGIN in .env}
+      BIKE_ADMIN_PASSWORD: ${BIKE_ADMIN_PASSWORD:?Set BIKE_ADMIN_PASSWORD in .env}
+      BIKE_TLS_DNS_NAMES: ${BIKE_TLS_DNS_NAMES:-}
+      BIKE_TLS_IP_ADDRESSES: ${BIKE_TLS_IP_ADDRESSES:-}
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    volumes:
+      - server_config:/app/config
+      - server_logs:/app/logs
+    stop_grace_period: 30s
+
+volumes:
+  postgres_data:
+  server_config:
+  server_logs:

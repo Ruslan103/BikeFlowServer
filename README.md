@@ -4,6 +4,16 @@
 
 ## Запуск сервера и базы данных в Docker
 
+### Готовый пакет для Windows
+
+Для сборки релизного ZIP-пакета с Docker-образами, шаблоном `.env` и BAT-файлами запуска выполните в PowerShell из корня репозитория:
+
+```powershell
+.\tools\build-release.ps1
+```
+
+Готовый архив появится в `dist\BikeFlowServer-1.0.0-Windows-x64.zip`. Пользователю понадобится Docker Desktop; Java и Maven устанавливать не нужно. Внутри архива `start.bat` создаёт `.env` при первом запуске, затем загружает образы и поднимает сервер с PostgreSQL.
+
 ### Шаг № 1. Установите Docker
 
 В Windows установите и запустите Docker Desktop. В Linux или macOS установите Docker Engine и плагин Docker Compose. В Windows откройте PowerShell.
